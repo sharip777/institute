@@ -194,7 +194,6 @@ class Vnins
         add_filter( 'woocommerce_countries',  array($this, "create_countries") );
         add_filter( 'woocommerce_continents', array($this, "create_continents") );
         add_filter( 'woocommerce_states', array($this, "create_no_sizo_states") );
-
         add_filter( 'woocommerce_states', array($this, "create_sizo_states") );
 
 
@@ -232,9 +231,13 @@ class Vnins
 
     public function create_sizo_states( $states )
     {
-        $new_states = array(
-            "Kl-122/3" => "Kl-122/3"
-        );
+        $institutes = new Institutes();
+        $sizo = $institutes->get_sizo();
+
+        $new_states = array();
+        foreach ($sizo as $item) {
+            $new_states[$item->name] = $item->name;
+        }
         $states['VSI'] = $new_states;
 
         return $states;
