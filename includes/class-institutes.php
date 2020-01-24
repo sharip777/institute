@@ -20,6 +20,10 @@ class Institutes
     public function get_sizo()
     {
         $institutes = $this->db->get_results("SELECT * FROM $this->table_name WHERE `is_sizo` = 1 ");
+        /*
+         *
+         * array( [0] => {id=> 1, name=>"KA-123/1"})
+         */
         return $institutes;
     }
 
