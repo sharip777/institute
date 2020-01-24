@@ -44,7 +44,7 @@ function vn_parcel_init()
                         'title' 		=> "Название метода",
                         'type' 			=> 'text',
                         'label' 		=> "Сменить название",
-                        'default' 		=> 'Посылка'
+                        'default' 		=> 'Посылка (20 кг)'
                     ),
                     'mass' => array(
                         'title' 		=> "Максимальный вес",
@@ -86,3 +86,53 @@ function vn_parcel_add($methods)
 
 add_filter('woocommerce_shipping_methods', 'vn_parcel_add');
 
+
+
+
+
+function vn_parcel_display_order( $message )   {
+
+    $packages = WC()->shipping->get_packages();
+
+
+    $chosen_methods = WC()->session->get( 'chosen_shipping_methods' );
+    if( is_array( $chosen_methods ) && in_array( 'vn_parcel', $chosen_methods ) ) {
+
+        foreach ( $packages as $i => $package ) {
+
+            if ( $chosen_methods[ $i ] != "vn_parcel" ) {
+
+                continue;
+
+            }
+
+            $Vn_Shipping_Parcel_Method = new Vn_Shipping_Parcel_Method();
+            $weightLimit = (int) $Vn_Shipping_Parcel_Method->settings['mass'];
+            $weight = 0;
+
+            foreach ( $package['contents'] as $item_id => $values )
+            {
+                $_product = $values['data'];
+                $weight = $weight + $_product->get_weight() * $values['quantity'];
+            }
+
+            $weight = wc_get_weight( $weight, 'kg' );
+
+            if( $weight > $weightLimit ) {
+
+                $message = sprintf( __( 'Извините, %d кг превышает максимально допустимый вес %d кг  %s', 'vn_parcel' ), $weight, $weightLimit, $Vn_Shipping_Parcel_Method->title );
+
+                $messageType = "error";
+
+                if( ! wc_has_notice( $message, $messageType ) ) {
+
+                    wc_print_notice( $message, $messageType );
+
+                }
+            }
+        }
+    }
+}
+add_action( 'woocommerce_before_cart', 'vn_parcel_display_order' );
+//add_action( 'woocommerce_review_order_before_cart_contents', 'vn_parcel_validate_order' , 10 );
+//add_action( 'woocommerce_after_checkout_validation', 'vn_parcel_validate_order' , 10 );
