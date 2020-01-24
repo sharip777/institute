@@ -197,8 +197,7 @@ class Vnins
     public function run()
     {
 
-        add_filter( 'woocommerce_countries',  array($this, "create_countries") );
-        add_filter( 'woocommerce_continents', array($this, "create_continents") );
+
         add_filter( 'woocommerce_states', array($this, "create_no_sizo_states") );
         add_filter( 'woocommerce_states', array($this, "create_sizo_states") );
 
@@ -265,22 +264,7 @@ class Vnins
 
     }
 
-    public function create_continents($continents)
-    {
-        $continents['ASIA']['countries'][] = 'VSI';
-        $continents['ASIA']['countries'][] = 'VNS';
-        return $continents;
-    }
 
-    public function create_countries($countries)
-    {
-        $new_countries = array(
-            'VSI' => __('СИЗО', 'woocommerce'),
-            'VNS' => __('Не СИЗО', 'woocommerce')
-        );
-
-        return array_merge($countries, $new_countries);
-    }
 
     /**
      * The name of the plugin used to uniquely identify it within the context of

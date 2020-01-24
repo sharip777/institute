@@ -64,7 +64,7 @@ function vn_post_init(){
 				);
 			}
 			public function calculate_shipping($package=array()){
-				$cost = isset($this -> settings['cost']) ? $this -> setting["cost"] : 2300 ;
+				$cost = isset($this -> settings['cost']) ? $this -> settings["cost"] : 2300 ;
 				$this -> add_rate(
 					array(
 						'id' => $this -> id,

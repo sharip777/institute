@@ -82,3 +82,22 @@ function run_vnins() {
 
 add_action("init", "run_vnins");
 
+add_filter( 'woocommerce_countries',  "create_countries");
+add_filter( 'woocommerce_continents', "create_continents" );
+
+function create_continents($continents)
+{
+    $continents['ASIA']['countries'][] = 'VSI';
+    $continents['ASIA']['countries'][] = 'VNS';
+    return $continents;
+}
+
+function create_countries($countries)
+{
+    $new_countries = array(
+        'VSI' => __('СИЗО', 'woocommerce'),
+        'VNS' => __('Не СИЗО', 'woocommerce')
+    );
+
+    return array_merge($countries, $new_countries);
+}
