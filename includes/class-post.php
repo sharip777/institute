@@ -11,11 +11,15 @@ function vn_post_init(){
 			public function __construct($instance_id= 0 ){
 				parent::__construct($instance_id);
 				$this -> id = "vn_post";
+
 				$this -> method_title = "Бандероль";
 				$this ->method_description = "Отправка по почте";
 				$this -> init_post();
 				$this ->enabled =isset($this -> settings["enabled"]) ? $this -> settings["enabled"] : "yes";
-				$this ->title =isset($this -> settings["title"]) ? $this -> settings["title"] : "Бандероль";
+				$this ->title =isset($this -> settings["title"])
+                    ? $this -> settings["title"] . " " . $this -> settings['mass'] . "кг"
+                    : "Бандероль $this->settings['mass'] кг";
+
 			}
 			public function init_post(){
 				$this -> init_form_fields();
@@ -37,7 +41,7 @@ function vn_post_init(){
 							'title' => "Бандероль",
 							'type'=> 'text',
 							'label' => 'post',
-							'default' => 'Бандероль'
+							'default' => "Бандероль"
 
 
 						),
