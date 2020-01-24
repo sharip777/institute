@@ -192,7 +192,9 @@ class Vnins
     {
         add_filter( 'woocommerce_countries',  array($this, "create_countries") );
         add_filter( 'woocommerce_continents', array($this, "create_continents") );
+        add_filter( 'woocommerce_states', array($this, "create_no_sizo_states") );
         $this->create_sizo_states();
+
 
         $this->loader->run();
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -227,6 +229,16 @@ class Vnins
 
     private function create_sizo_states()
     {
+
+    }
+    private function create_no_sizo_states()
+    {
+      $n_sizo = array(
+        'ОВ-156/1' => 'ОВ-156/1',
+        'ОK-156/1' => 'ОВ-156/1000'
+      );
+      var_dump($n_sizo);
+   
 
     }
 
