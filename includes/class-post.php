@@ -133,7 +133,18 @@ function vn_post_display_order( $message )   {
                 if( ! wc_has_notice( $message, $messageType ) ) {
 
                     wc_print_notice( $message, $messageType );
+                }
 
+                }else{
+                	$ost = $weightLimit - $weight;
+
+                	$message = sprintf( __( 'Общий вес %d кг, осталось %d кг', 'vn_parcel' ), $weight, $ost, $Vn_Shipping_Parcel_Method->title );
+
+	                $messageType = "notice";
+
+	                if( ! wc_has_notice( $message, $messageType ) ) {
+
+	                    wc_print_notice( $message, $messageType );
                 }
             }
         }
