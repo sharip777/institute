@@ -127,7 +127,11 @@ class Vnins
         require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-vnins-public.php';
 
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-institutes.php';
+
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-parcel.php';
+
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-post.php';
+
 
         $this->loader = new Vnins_Loader();
 
