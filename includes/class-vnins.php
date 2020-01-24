@@ -69,6 +69,7 @@ class Vnins
      */
     public function __construct()
     {
+
         if (defined('VNINS_VERSION')) {
             $this->version = VNINS_VERSION;
         } else {
@@ -126,6 +127,7 @@ class Vnins
         require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-vnins-public.php';
 
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-institutes.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-parcel.php';
 
         $this->loader = new Vnins_Loader();
 
@@ -195,7 +197,6 @@ class Vnins
         add_filter( 'woocommerce_continents', array($this, "create_continents") );
         add_filter( 'woocommerce_states', array($this, "create_no_sizo_states") );
         add_filter( 'woocommerce_states', array($this, "create_sizo_states") );
-
 
 
         $this->loader->run();

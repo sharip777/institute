@@ -79,5 +79,6 @@ function run_vnins() {
 	$plugin->run();
 
 }
+
 add_action("init", "run_vnins");
 
