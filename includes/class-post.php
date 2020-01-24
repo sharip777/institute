@@ -34,7 +34,7 @@ function vn_post_init(){
 
 						),
 						'title' => array(
-							'title' => "Бандероль",
+							'title' => "Бандероль ",
 							'type'=> 'text',
 							'label' => 'post',
 							'default' => 'Бандероль'
@@ -89,3 +89,52 @@ function vn_post_add($m){
 	return $m;
 };
 add_filter("woocommerce_shipping_methods", "vn_post_add");
+
+
+
+function vn_post_validate_order( $posted )   {
+
+    $packages = WC()->shipping->get_packages();
+
+    $chosen_methods = WC()->session->get( 'chosen_shipping_methods' );
+
+    if( is_array( $chosen_methods ) && in_array( 'vn_post', $chosen_methods ) ) {
+
+        foreach ( $packages as $i => $package ) {
+
+            if ( $chosen_methods[ $i ] != "vn_post" ) {
+
+                continue;
+
+            }
+
+            $Vn_Shipping_Post_Method = new Vn_Shipping_Post_Method();
+            $weightLimit = (int) $Vn_Shipping_Post_Method->settings['weight'];
+            $weight = 0;
+
+            foreach ( $package['contents'] as $item_id => $values )
+            {
+                $_product = $values['data'];
+                $weight = $weight + $_product->get_weight() * $values['quantity'];
+            }
+
+            $weight = wc_get_weight( $weight, 'kg' );
+
+            if( $weight > $weightLimit ) {
+
+                $message = sprintf( __( 'Sorry, %d kg exceeds the maximum weight of %d kg for %s', 'tutsplus' ), $weight, $weightLimit, $Vn_Shipping_Post_Method->title );
+                $message .= " ****TUPLUS****";
+                $messageType = "error";
+
+                if( ! wc_has_notice( $message, $messageType ) ) {
+
+                    wc_add_notice( $message, $messageType );
+
+                }
+            }
+        }
+    }
+}
+
+add_action( 'woocommerce_review_order_before_cart_contents', 'vn_post_validate_order' , 10 );
+add_action( 'woocommerce_after_checkout_validation', 'vn_post_validate_order' , 10 );
