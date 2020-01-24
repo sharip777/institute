@@ -244,13 +244,15 @@ class Vnins
     public function create_no_sizo_states($states)
 
     {
+        $institutes = new Institutes();
+        $no_sizo  = $institutes -> get_not_sizo();
 
-        $n_sizo = array(
-            'ОВ-156/1' => 'ОВ-156/1',
-            'ОK-156/1' => 'ОВ-156/1000'
-        );
-        var_dump($n_sizo);
-        $states['VNS'] = $n_sizo;
+        $new_states = array();
+        foreach ( $no_sizo as $item) {
+            $new_states[$item->name ] = $item->name; 
+        };
+    
+        $states['VNS'] = $new_states;
         return $states;
 
     }
