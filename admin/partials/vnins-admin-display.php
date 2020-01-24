@@ -14,7 +14,8 @@
 
 global $wpdb;
 
-$institutes = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}" . VNINS_DBTN);
+$institutes = new Institutes();
+$data = $institutes->get_all_institutes();
 
 
 //echo "<pre>";
@@ -52,7 +53,7 @@ $institutes = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}" . VNINS_DBTN);
     </thead>
     <tbody>
     <?php $current = 1; ?>
-    <?php foreach ($institutes as $instituete): ?>
+    <?php foreach ($data as $instituete): ?>
         <tr>
             <td><?php echo $current++; ?></td>
             <td><?php echo $instituete->name ?></td>

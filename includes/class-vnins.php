@@ -122,6 +122,8 @@ class Vnins {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-vnins-public.php';
 
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-institutes.php';
+
 		$this->loader = new Vnins_Loader();
 
 	}
@@ -181,7 +183,7 @@ class Vnins {
 	 * @since    1.0.0
 	 */
 	public function run() {
-
+	            
 		$this->loader->run();
 		if ($_SERVER['REQUEST_METHOD'] === "POST") {
 			$is_sizo = 0;
