@@ -98,7 +98,7 @@ add_filter("woocommerce_shipping_methods", "vn_post_add");
 
 
 
-function vn_post_display_order( $message )   {
+function vn_post_display_cart( $message )   {
 
     $packages = WC()->shipping->get_packages();
 
@@ -150,6 +150,61 @@ function vn_post_display_order( $message )   {
         }
     }
 }
-add_action( 'woocommerce_before_cart', 'vn_post_display_order' );
-//add_action( 'woocommerce_review_order_before_cart_contents', 'vn_parcel_validate_order' , 10 );
-//add_action( 'woocommerce_after_checkout_validation', 'vn_parcel_validate_order' , 10 );
+add_action( 'woocommerce_before_cart', 'vn_post_display_cart' );
+
+
+function vn_post_display_order( $posted )   {
+
+    $packages = WC()->shipping->get_packages();
+
+    $chosen_methods = WC()->session->get( 'chosen_shipping_methods' );
+
+    if( is_array( $chosen_methods ) && in_array( 'vn_post', $chosen_methods ) ) {
+
+        foreach ( $packages as $i => $package ) {
+
+            if ( $chosen_methods[ $i ] != "vn_post" ) {
+
+                continue;
+
+            }
+
+            $Vn_Shipping_Post_Method = new Vn_Shipping_Post_Method();
+            $weightLimit = (float) $Vn_Shipping_Post_Method->settings['mass'];
+            $weight = 0;
+
+            foreach ( $package['contents'] as $item_id => $values )
+            {
+                $_product = $values['data'];
+                $weight = $weight + $_product->get_weight() * $values['quantity'];
+            }
+
+            if( $weight > $weightLimit ) {
+
+                $message = sprintf( __( 'Извините, %s превышает максимально допустимый вес %s кг  %s', 'vn_parcel' ), vn_kg($weight), $weightLimit, $Vn_Shipping_Post_Method->title );
+
+                $messageType = "error";
+
+                if( ! wc_has_notice( $message, $messageType ) ) {
+
+                    wc_add_notice( $message, $messageType );
+                }
+
+            }else{
+
+                $ost = $weightLimit - $weight;
+                $message = sprintf( __( 'Общий вес %s, осталось %s', 'vn_parcel' ), vn_kg($weight), vn_kg($ost), $Vn_Shipping_Post_Method->title );
+
+                $messageType = "notice";
+
+                if( ! wc_has_notice( $message, $messageType ) ) {
+
+                    wc_add_notice( $message, $messageType );
+                }
+            }
+        }
+    }
+}
+
+add_action( 'woocommerce_review_order_before_cart_contents', 'vn_post_display_order' , 10 );
+add_action( 'woocommerce_after_checkout_validation', 'vn_post_display_order' , 10 );
