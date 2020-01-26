@@ -52,25 +52,12 @@ class Vnins_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		
-        add_filter( 'woocommerce_states', array($this, 'vnis_states_as_institute') );
-        add_action("woocommerce_before_shipping_calculator", function (){
-            //WC()->customer->set_shipping_country("");
-        });
+        //add_filter( 'woocommerce_states', array($this, 'vnis_states_as_institute') );
+//        add_action("woocommerce_before_shipping_calculator", function (){
+//            //WC()->customer->set_shipping_country("");
+//        });
 
-    }
-    public function vnis_states_as_institute( $states ) {
-        global $wpdb;
 
-        $data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}" . VNINS_DBTN);
-
-        $institutes1 = array_map(function ($institute) {
-            return $institute->name;
-        }, $data);
-        $states[''] = array();
-        foreach ($institutes1 as $value){
-            $states['CISO'][$value] =  $value;
-        };
-        return $states;
     }
 	/**
 	 * Register the stylesheets for the public-facing side of the site.

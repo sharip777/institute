@@ -14,6 +14,8 @@ function vn_post_init(){
 
 				$this -> method_title = "Бандероль";
 				$this ->method_description = "Отправка по почте";
+                $this->availability = "including";
+                $this->countries = array("VNS");
 				$this -> init_post();
 				$this ->enabled =isset($this -> settings["enabled"]) ? $this -> settings["enabled"] : "yes";
 				$this ->title =isset($this -> settings["title"])
@@ -50,7 +52,7 @@ function vn_post_init(){
 							'type'=> 'number',
 							'label' => 'кг',
 
-							'default' => 30
+							'default' => 3
 
 
 						),
@@ -113,7 +115,7 @@ function vn_post_display_order( $message )   {
             }
 
             $Vn_Shipping_Parcel_Method = new Vn_Shipping_Post_Method();
-            $weightLimit = (int) $Vn_Shipping_Parcel_Method->settings['mass'];
+            $weightLimit = (float) $Vn_Shipping_Parcel_Method->settings['mass'];
             $weight = 0;
 
             foreach ( $package['contents'] as $item_id => $values )
@@ -122,11 +124,9 @@ function vn_post_display_order( $message )   {
                 $weight = $weight + $_product->get_weight() * $values['quantity'];
             }
 
-            $weight = wc_get_weight( $weight, 'kg' );
-
             if( $weight > $weightLimit ) {
 
-                $message = sprintf( __( 'Извините, %d кг превышает максимально допустимый вес %d кг  %s', 'vn_parcel' ), $weight, $weightLimit, $Vn_Shipping_Parcel_Method->title );
+                $message = sprintf( __( 'Извините, %s превышает максимально допустимый вес %s кг  %s', 'vn_parcel' ), vn_kg($weight), $weightLimit, $Vn_Shipping_Parcel_Method->title );
 
                 $messageType = "error";
 
@@ -136,9 +136,9 @@ function vn_post_display_order( $message )   {
                 }
 
                 }else{
-                	$ost = $weightLimit - $weight;
 
-                	$message = sprintf( __( 'Общий вес %d кг, осталось %d кг', 'vn_parcel' ), $weight, $ost, $Vn_Shipping_Parcel_Method->title );
+                $ost = $weightLimit - $weight;
+                	$message = sprintf( __( 'Общий вес %s, осталось %s', 'vn_parcel' ), vn_kg($weight), vn_kg($ost), $Vn_Shipping_Parcel_Method->title );
 
 	                $messageType = "notice";
 

@@ -15,7 +15,8 @@ function vn_parcel_init()
                 $this->id = 'vn_parcel';
                 $this->method_title = "Посылка";
                 $this->method_description = "Отправка по почте. Максимальный вес посылки 20 кг";
-
+                $this->availability = "including";
+                $this->countries = array("VNS");
                 $this->init();
 
                 $this->enabled = isset( $this->settings['enabled'] ) ? $this->settings['enabled'] : 'yes';
@@ -119,8 +120,8 @@ function vn_parcel_display_order( $message )   {
             $weight = wc_get_weight( $weight, 'kg' );
 
             if( $weight > $weightLimit ) {
+                $message = sprintf( __( 'Извините, %s превышает максимально допустимый вес %s кг  %s', 'vn_parcel' ), vn_kg($weight), $weightLimit, $Vn_Shipping_Parcel_Method->title );
 
-                $message = sprintf( __( 'Извините, %d кг превышает максимально допустимый вес %d кг  %s', 'vn_parcel' ), $weight, $weightLimit, $Vn_Shipping_Parcel_Method->title );
 
                 $messageType = "error";
 
@@ -131,7 +132,7 @@ function vn_parcel_display_order( $message )   {
                 }
             }else{
                 $ost = $weightLimit-$weight;
-                $message = sprintf( __( 'Общий вес %d кг, осталось %d кг %s', 'vn_parcel' ), $weight, $ost, $Vn_Shipping_Parcel_Method->title );
+                $message = sprintf( __( 'Общий вес %s, осталось %s', 'vn_parcel' ), vn_kg($weight), vn_kg($ost), $Vn_Shipping_Parcel_Method->title );
 
                 $messageType = "notice";
 

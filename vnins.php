@@ -37,6 +37,16 @@ if ( ! defined( 'WPINC' ) ) {
  */
 define( 'VNINS_VERSION', '1.0.0' );
 define("VNINS_DBTN", "tablename");
+
+function vn_kg($weight){
+    $view = '';
+    $g = wc_get_weight( $weight-floor($weight), 'g' );
+    $kg = wc_get_weight(floor($weight), 'kg' );
+    $view .= $kg !== (float)0 ? "$kg кг" : '';
+    $view .= $g !== (float)0 ? " $g г" : '';
+    return $view;
+
+}
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-vnins-activator.php
@@ -101,3 +111,10 @@ function create_countries($countries)
 
     return array_merge($countries, $new_countries);
 }
+
+
+
+// Убрать из корзины город и почтовый индекс
+add_filter( 'woocommerce_shipping_calculator_enable_postcode', '__return_false' );
+add_filter( 'woocommerce_shipping_calculator_enable_city', '__return_false' );
+
