@@ -132,6 +132,7 @@ class Vnins
 
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-post.php';
 
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-tarlan.php';
 
         $this->loader = new Vnins_Loader();
 
